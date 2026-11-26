@@ -34,40 +34,4 @@ public class Admin extends User {
             userId, userName, userPassword, userRegisterTime, userRole
         );
     }
-    // Getter and Setter methods for each instance variable
-    public double getOrderPrice() {
-        return orderPrice;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getProId() {
-        return proId;
-    }
-
-    public void setProId(String proId) {
-        this.proId = proId;
-    }
-
-    public String getOrderTime() {
-        return orderTime;
-    }
-
-    public void setOrderTime(String orderTime) {
-        this.orderTime = orderTime;
-    }
 }

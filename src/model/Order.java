@@ -15,7 +15,7 @@ public class Order {
      * @param proId  ID of the product ordered
      * @param orderTime Format: "DD-MM-YYYY_HH:MM:SS"
      */
-    public Order(String orderId, String userId, String proId, String orderTime, double orderPrice) {
+    public Order(String orderId, String userId, String proId, String orderTime) {
         this.orderId = orderId;
         this.userId = userId;
         this.proId = proId;
