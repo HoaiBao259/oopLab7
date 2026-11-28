@@ -66,14 +66,14 @@ public class CustomerOperation {
             return false;
         }
         synchronized (users) {
-            List<String> lines = UserRecords.readUserLines();
-            if (UserRecords.usernameExists(lines, userName, null)) {
+            List<String> lines = users.readUserLines();
+            if (users.usernameExists(lines, userName, null)) {
                 return false;
             }
-            Customer customer = new Customer(users.generateUniqueUserId(), userName,
+            Customer customer = new Customer(users.generateUniqueUserId(lines), userName,
                     users.encryptPassword(userPassword), DateTimes.now(), "customer", userEmail, userMobile);
             lines.add(customer.toString());
-            UserRecords.writeUserLines(lines);
+            users.writeUserLines(lines);
             return true;
         }
     }
@@ -94,18 +94,18 @@ public class CustomerOperation {
         }
         String attribute = attributeName.replace("_", "").toLowerCase(Locale.ROOT);
         synchronized (users) {
-            List<String> lines = UserRecords.readUserLines();
+            List<String> lines = users.readUserLines();
             for (int index = 0; index < lines.size(); index++) {
-                Map<String, String> record = FlatJson.parse(lines.get(index));
+                Map<String, String> record = users.parseJson(lines.get(index));
                 if (!customerObject.getUserId().equals(record.get("user_id"))
-                        || !(UserRecords.toUser(record) instanceof Customer stored)) {
+                        || !(users.toUser(record) instanceof Customer stored)) {
                     continue;
                 }
                 if (!applyProfileChange(attribute, value, stored, lines)) {
                     return false;
                 }
                 lines.set(index, stored.toString());
-                UserRecords.writeUserLines(lines);
+                users.writeUserLines(lines);
                 customerObject.setUserName(stored.getUserName());
                 customerObject.setUserPassword(stored.getUserPassword());
                 customerObject.setUserEmail(stored.getUserEmail());
@@ -120,7 +120,7 @@ public class CustomerOperation {
                                        List<String> lines) {
         switch (attribute) {
             case "name", "username" -> {
-                if (!users.validateUsername(value) || UserRecords.usernameExists(lines, value, customer.getUserId())) {
+                if (!users.validateUsername(value) || users.usernameExists(lines, value, customer.getUserId())) {
                     return false;
                 }
                 customer.setUserName(value);
@@ -162,13 +162,13 @@ public class CustomerOperation {
             return false;
         }
         synchronized (users) {
-            List<String> lines = UserRecords.readUserLines();
+            List<String> lines = users.readUserLines();
             boolean removed = lines.removeIf(line -> {
-                Map<String, String> record = FlatJson.parse(line);
+                Map<String, String> record = users.parseJson(line);
                 return customerId.equals(record.get("user_id")) && "customer".equals(record.get("user_role"));
             });
             if (removed) {
-                UserRecords.writeUserLines(lines);
+                users.writeUserLines(lines);
             }
             return removed;
         }
@@ -186,9 +186,9 @@ public class CustomerOperation {
             return null;
         }
         synchronized (users) {
-            for (String line : UserRecords.readUserLines()) {
-                Map<String, String> record = FlatJson.parse(line);
-                if (customerId.equals(record.get("user_id")) && UserRecords.toUser(record) instanceof Customer customer) {
+            for (String line : users.readUserLines()) {
+                Map<String, String> record = users.parseJson(line);
+                if (customerId.equals(record.get("user_id")) && users.toUser(record) instanceof Customer customer) {
                     return customer;
                 }
             }
@@ -207,8 +207,8 @@ public class CustomerOperation {
     public CustomerListResult getCustomerList(int pageNumber) {
         List<Customer> customers = new ArrayList<>();
         synchronized (users) {
-            for (String line : UserRecords.readUserLines()) {
-                if (UserRecords.toUser(FlatJson.parse(line)) instanceof Customer customer) {
+            for (String line : users.readUserLines()) {
+                if (users.toUser(users.parseJson(line)) instanceof Customer customer) {
                     customers.add(customer);
                 }
             }
@@ -224,9 +224,9 @@ public class CustomerOperation {
      */
     public void deleteAllCustomers() {
         synchronized (users) {
-            List<String> lines = UserRecords.readUserLines();
-            if (lines.removeIf(line -> "customer".equals(FlatJson.parse(line).get("user_role")))) {
-                UserRecords.writeUserLines(lines);
+            List<String> lines = users.readUserLines();
+            if (lines.removeIf(line -> "customer".equals(users.parseJson(line).get("user_role")))) {
+                users.writeUserLines(lines);
             }
         }
     }

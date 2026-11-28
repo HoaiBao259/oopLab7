@@ -31,21 +31,21 @@ public class AdminOperation {
      */
     public void registerAdmin() {
         synchronized (users) {
-            List<String> lines = UserRecords.readUserLines();
+            List<String> lines = users.readUserLines();
             for (String line : lines) {
-                if (UserRecords.toUser(FlatJson.parse(line)) instanceof Admin) {
+                if (users.toUser(users.parseJson(line)) instanceof Admin) {
                     return;
                 }
             }
 
             String userName = DEFAULT_USERNAME;
-            while (UserRecords.usernameExists(lines, userName, null)) {
+            while (users.usernameExists(lines, userName, null)) {
                 userName += "_";
             }
-            Admin admin = new Admin(users.generateUniqueUserId(), userName,
+            Admin admin = new Admin(users.generateUniqueUserId(lines), userName,
                     users.encryptPassword(DEFAULT_PASSWORD), DateTimes.now(), "admin");
             lines.add(admin.toString());
-            UserRecords.writeUserLines(lines);
+            users.writeUserLines(lines);
         }
     }
 }
