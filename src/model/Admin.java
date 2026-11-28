@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Represents an administrator account.
+ */
 public class Admin extends User {
 
     /**
@@ -16,8 +19,9 @@ public class Admin extends User {
         super(userId, userName, userPassword, userRegisterTime, userRole);
     }
 
-    //Default constructor
-
+    /**
+     * Constructs an administrator model with default account fields.
+     */
     public Admin() {
         super("u_0000000000", "admin", "admin1", "23-11-2026_00:00:00", "admin");
     }
@@ -28,10 +32,6 @@ public class Admin extends User {
      */
     @Override
     public String toString() {
-        return String.format(
-            "{\"user_id\":\"%s\", \"user_name\":\"%s\", \"user_password\":\"%s\", " +
-            "\"user_register_time\":\"%s\", \"user_role\":\"%s\"}",
-            userId, userName, userPassword, userRegisterTime, userRole
-        );
+        return super.toString();
     }
 }

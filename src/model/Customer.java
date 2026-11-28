@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Represents a customer account with email and mobile contact information.
+ */
 public class Customer extends User {
     private String userEmail;
     private String userMobile;
@@ -22,11 +25,13 @@ public class Customer extends User {
         this.userMobile = userMobile;
     }
 
-    //Default constructor
+    /**
+     * Constructs a customer model with default account and contact fields.
+     */
     public Customer() {
-        super("u_0000000000", "default_user", "default1", "23-11-2026_00:00:00", "customer");
-        this.userEmail = "default@example.com";
-        this.userMobile = "0400000000";
+        super();
+        userEmail = "default@example.com";
+        userMobile = "0400000000";
     }
 
     /**
@@ -36,27 +41,43 @@ public class Customer extends User {
     @Override
     public String toString() {
         return String.format(
-            "{\"user_id\":\"%s\", \"user_name\":\"%s\", \"user_password\":\"%s\", " +
-            "\"user_register_time\":\"%s\", \"user_role\":\"%s\", " +
-            "\"user_email\":\"%s\", \"user_mobile\":\"%s\"}",
-            userId, userName, userPassword, userRegisterTime, userRole, userEmail, userMobile
+            "{%s, \"user_email\":%s, \"user_mobile\":%s}",
+            userFieldsToString(), JsonStrings.quote(userEmail), JsonStrings.quote(userMobile)
         );
     }
 
-    //Getters and Setters
-
+    /**
+     * Returns the customer's email address.
+     *
+     * @return the email address
+     */
     public String getUserEmail() {
         return userEmail;
     }
 
+    /**
+     * Returns the customer's mobile number.
+     *
+     * @return the mobile number
+     */
     public String getUserMobile() {
         return userMobile;
     }
 
+    /**
+     * Updates the model's email address.
+     *
+     * @param userEmail the new email address
+     */
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
 
+    /**
+     * Updates the model's mobile number.
+     *
+     * @param userMobile the new mobile number
+     */
     public void setUserMobile(String userMobile) {
         this.userMobile = userMobile;
     }
